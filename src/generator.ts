@@ -9,6 +9,8 @@ import {
   generateRegistrationJson,
   generateRegisterScript,
   generateAgentTs,
+  generateDockerfile,
+  generateDockerCompose,
 } from './templates/base.js';
 import { generateA2AServer, generateAgentCard } from './templates/a2a.js';
 import { generateMCPServer, generateMCPTools } from './templates/mcp.js';
@@ -32,6 +34,8 @@ export async function generateProject(answers: WizardAnswers): Promise<void> {
   await writeFile(projectPath, 'registration.json', generateRegistrationJson(answers, chain));
   await writeFile(projectPath, 'src/register.ts', generateRegisterScript(answers, chain));
   await writeFile(projectPath, 'src/agent.ts', generateAgentTs());
+  await writeFile(projectPath, 'Dockerfile', generateDockerfile());
+  await writeFile(projectPath, 'docker-compose.yml', generateDockerCompose(answers));
   await writeFile(projectPath, 'tsconfig.json', generateTsConfig());
   await writeFile(projectPath, '.gitignore', generateGitignore());
 
