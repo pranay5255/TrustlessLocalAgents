@@ -5,8 +5,8 @@ import { runWizard, hasFeature } from './wizard.js';
 import { generateProject } from './generator.js';
 
 async function main() {
-  console.log(chalk.bold.cyan('\n🤖 ERC-8004 Agent Generator\n'));
-  console.log(chalk.gray('Create a trustless AI agent with A2A, MCP, and x402 support\n'));
+  console.log(chalk.bold.cyan('\n🤖 Based Agent Generator\n'));
+  console.log(chalk.gray('Create a Based Agent with A2A, MCP, and x402 support\n'));
 
   try {
     const answers = await runWizard();
@@ -16,7 +16,7 @@ async function main() {
 
     await generateProject(answers);
 
-    spinner.succeed(chalk.green('ERC-8004 Agent generated successfully!'));
+    spinner.succeed(chalk.green('Based Agent generated successfully!'));
 
     // Print step-by-step guide
     const projectDir = answers.projectDir === '.' ? 'current directory' : answers.projectDir;
