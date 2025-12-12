@@ -303,11 +303,45 @@ main().catch(console.error);
 `;
 }
 
+export function generateDockerfile(): string {
+  return `FROM node:18-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
+`;
+}
+
+export function generateDockerCompose(answers: WizardAnswers): string {
+  const agentSlug = answers.agentName.toLowerCase().replace(/\s+/g, '-');
+  return `version: '3.8'
+
+services:
+  ${agentSlug}:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    restart: always
+    volumes:
+      - ./src:/app/src
+`;
+}
+
 export function generateAgentTs(): string {
   return `/**
  * LLM Agent
- * 
- * This file contains the AI logic for your agent.
  * By default, it uses OpenRouter.
  */
 
