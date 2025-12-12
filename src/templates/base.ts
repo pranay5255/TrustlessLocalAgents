@@ -62,12 +62,10 @@ export function generateEnvExample(answers: WizardAnswers): string {
 
   let env = `# Required for registration
 PRIVATE_KEY=${privateKeyValue}
-
-# OpenAI API key for LLM agent
-OPENAI_API_KEY=your_openai_api_key_here
-`;
-
-  if (answers.storageType === 'ipfs') {
+// OpenRouter API key for LLM agent
+    OPENROUTER_API_KEY=your_openrouter_api_key_here
+    OPENROUTER_MODEL=openai/gpt-4o-mini
+    `;if (answers.storageType === 'ipfs') {
     env += `
 # Pinata for IPFS uploads
 PINATA_JWT=your_pinata_jwt_here
@@ -310,24 +308,19 @@ export function generateAgentTs(): string {
  * LLM Agent
  * 
  * This file contains the AI logic for your agent.
- * By default, it uses OpenAI's GPT-4o-mini model.
- * 
- * To customize:
- * - Change the model in chat() (e.g., 'gpt-4o', 'gpt-3.5-turbo')
- * - Modify the system prompt in generateResponse()
- * - Add custom logic, tools, or RAG capabilities
- * 
- * To use a different LLM provider:
- * - Replace the OpenAI import with your preferred SDK
- * - Update the chat() function accordingly
+ * By default, it uses OpenRouter.
  */
 
 import OpenAI from 'openai';
 
-// Initialize OpenAI client
-// API key is loaded from OPENAI_API_KEY environment variable
+// Initialize OpenRouter client
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  baseURL: 'https://openrouter.ai/api/v1',
+  apiKey: process.env.OPENROUTER_API_KEY,
+  defaultHeaders: {
+    'HTTP-Referer': 'https://github.com/pranay5255/x402-Learn',
+    'X-Title': 'x402 Agent',
+  },
 });
 
 // ============================================================================
@@ -345,18 +338,15 @@ export interface AgentMessage {
 
 /**
  * Send messages to the LLM and get a response
- * This is the low-level function that calls the OpenAI API
+ * This is the low-level function that calls the OpenRouter API
  * 
  * @param messages - Array of conversation messages
  * @returns The assistant's response text
  */
 export async function chat(messages: AgentMessage[]): Promise<string> {
   const response = await openai.chat.completions.create({
-    model: 'gpt-4o-mini', // Change model here if needed
+    model: process.env.OPENROUTER_MODEL || 'openai/gpt-4o-mini',
     messages: messages.map((m) => ({ role: m.role, content: m.content })),
-    // Add more options as needed:
-    // temperature: 0.7,
-    // max_tokens: 1000,
   });
 
   return response.choices[0]?.message?.content ?? 'No response';
@@ -372,7 +362,6 @@ export async function chat(messages: AgentMessage[]): Promise<string> {
  */
 export async function generateResponse(userMessage: string, history: AgentMessage[] = []): Promise<string> {
   // System prompt defines your agent's personality and behavior
-  // Customize this to match your agent's purpose
   const systemPrompt: AgentMessage = {
     role: 'system',
     content: 'You are a helpful AI assistant registered on the ERC-8004 protocol. Be concise and helpful.',
