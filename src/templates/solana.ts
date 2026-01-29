@@ -130,8 +130,9 @@ export function generateSolanaRegistrationJson(answers: WizardAnswers, chain: So
         description: answers.agentDescription,
         image: answers.agentImage,
         endpoints,
-        active: true,
-        // OASF taxonomy - https://github.com/8004-org/oasf
+        // Best practice: Keep active=false until production-ready
+        active: false,
+        // OASF taxonomy - https://github.com/agntcy/oasf
         skills: answers.skills || [],
         domains: answers.domains || [],
         trustModels: answers.trustModels, // SDK uses trustModels, not supportedTrust
@@ -500,16 +501,25 @@ Edit \`registration.json\` and add:
 \`\`\`json
 {
   "skills": [
-    "natural_language_processing/summarization",
+    "natural_language_processing/natural_language_generation/summarization",
     "analytical_skills/coding_skills/text_to_code"
   ],
   "domains": [
-    "technology/software_engineering"
+    "technology/software_engineering",
+    "finance_and_business/investment_services"
   ]
 }
 \`\`\`
 
-Browse the full taxonomy: https://github.com/8004-org/oasf
+Browse the full taxonomy: https://schema.oasf.outshift.com/0.8.0
+
+## Going Live
+
+By default, your agent is registered with \`active: false\`. This is intentional - it lets you test without appearing in explorer listings.
+
+When you're ready for production:
+1. Edit \`registration.json\` and change \`"active": false\` to \`"active": true\`
+2. Re-run \`npm run register\` to update your agent's metadata
 
 ## Next Steps
 

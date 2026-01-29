@@ -127,8 +127,10 @@ export async function runWizard(): Promise<WizardAnswers> {
             choices: () => {
                 return [
                     { name: "A2A Server (agent-to-agent communication)", value: "a2a", checked: true },
-                    { name: "x402 Payments (Coinbase, USDC)", value: "x402", checked: false },
                     { name: "MCP Server (Model Context Protocol tools)", value: "mcp", checked: false },
+                    // x402 disabled: requires Base Sepolia, but 8004 registry is only on Eth Sepolia
+                    // Re-enable when 8004 deploys to Base or x402 supports Eth Sepolia
+                    { name: "x402 Payments (coming soon)", value: "x402", disabled: "Base Sepolia not yet supported" },
                 ];
             },
         },

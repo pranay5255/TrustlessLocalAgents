@@ -11,7 +11,7 @@ export function generatePackageJson(answers: WizardAnswers): string {
     };
 
     const dependencies: Record<string, string> = {
-        "agent0-sdk": "^1.0.2",
+        "agent0-sdk": "latest",
         dotenv: "^16.3.1",
         openai: "^4.68.0",
     };
@@ -185,8 +185,15 @@ ${
   agent.setTrust(${trustArgs[0]}, ${trustArgs[1]}, ${trustArgs[2]});
 
   // Set status flags
-  agent.setActive(true);
+  // Best practice: Keep active=false until your agent is production-ready
+  // Change to true when you're ready for users to discover your agent
+  agent.setActive(false);
   agent.setX402Support(${hasX402});
+
+  // Optional: Add OASF skills and domains for better discoverability
+  // Browse taxonomy: https://github.com/agntcy/oasf
+  // agent.addSkill('natural_language_processing/natural_language_generation/summarization');
+  // agent.addDomain('technology/software_engineering');
 
   // Register on-chain with IPFS
   console.log('⛓️  Registering agent on ${chain.name}...');
@@ -449,18 +456,27 @@ Payment configuration in \`.env\`:
 
 Add capabilities and domain expertise to help others discover your agent.
 
-Edit \`src/register.ts\` and add before \`registerIPFS()\`:
+Edit \`src/register.ts\` and uncomment/add before \`registerIPFS()\`:
 
 \`\`\`typescript
 // Add skills (what your agent can do)
-agent.addSkill('natural_language_processing/summarization', true);
-agent.addSkill('analytical_skills/coding_skills/text_to_code', true);
+agent.addSkill('natural_language_processing/natural_language_generation/summarization');
+agent.addSkill('analytical_skills/coding_skills/text_to_code');
 
-// Add domains (areas of expertise)
-agent.addDomain('technology/software_engineering', true);
+// Add domains (areas of expertise)  
+agent.addDomain('technology/software_engineering');
+agent.addDomain('finance_and_business/investment_services');
 \`\`\`
 
-Browse the full taxonomy: https://github.com/8004-org/oasf
+Browse the full taxonomy: https://schema.oasf.outshift.com/0.8.0
+
+## Going Live
+
+By default, your agent is registered with \`active: false\`. This is intentional - it lets you test without appearing in explorer listings.
+
+When you're ready for production:
+1. Edit \`src/register.ts\` and change \`agent.setActive(false)\` to \`agent.setActive(true)\`
+2. Re-run \`npm run register\` to update your agent's metadata
 
 ## Next Steps
 

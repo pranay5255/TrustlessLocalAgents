@@ -52,7 +52,7 @@ my-agent/
 | **A2A server**        | Enable agent-to-agent communication                                                                            |
 | **A2A streaming**     | Enable Server-Sent Events (SSE) for streaming responses                                                        |
 | **MCP server**        | Enable Model Context Protocol tools                                                                            |
-| **x402 payments**     | Enable [Coinbase x402](https://docs.cdp.coinbase.com/x402/quickstart-for-sellers) USDC payments (EVM & Solana) |
+| **x402 payments**     | Coming soon (requires Base Sepolia support in 8004 registry) |
 | **Chain**             | EVM: Ethereum Sepolia (more chains coming soon) / Solana: Devnet                                               |
 | **Trust models**      | reputation, crypto-economic, tee-attestation                                                                   |
 
@@ -161,16 +161,13 @@ curl -X POST http://localhost:3000/a2a \
   }'
 ```
 
-If x402 is enabled, you'll get a `402 Payment Required` response with payment instructions. This is expected - it means the payment gate is working.
+## x402 Payments (Coming Soon)
 
-## x402 Payments
+[Coinbase x402](https://github.com/coinbase/x402) payment support is temporarily disabled. The x402 facilitator only supports Base Sepolia, while the ERC-8004 registry is currently deployed on Ethereum Sepolia.
 
-If enabled, the A2A server uses [Coinbase x402](https://github.com/coinbase/x402) for micropayments:
-
--   **EVM chains:** Uses `@x402/evm` with USDC on supported networks
--   **Solana:** Uses `@x402/svm` with USDC on Solana
--   Per-request pricing (default: $0.001)
--   Automatic payment verification via facilitator
+x402 will be re-enabled when:
+- ERC-8004 registry deploys to Base Sepolia, or
+- x402 facilitator adds Ethereum Sepolia support
 
 ## MCP Protocol
 
